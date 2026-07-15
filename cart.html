@@ -3,198 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Keranjang & Checkout — AR Modest Fashion</title>
+<title>Keranjang — Larasati</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<header class="site">
-  <div class="nav">
-    <div class="logo">AR<span class="mark">.</span><small style="margin-left:6px;">Modest Fashion</small></div>
-    <button class="burger btn-ghost btn btn-sm">Menu</button>
-    <nav class="nav-links">
+<div class="announce-bar" data-announcement></div>
+
+<header class="site-header">
+  <div class="row">
+    <a href="index.html" class="brand" data-brand-name>Larasati</a>
+    <nav class="main-nav">
       <a href="index.html">Beranda</a>
-      <a href="catalog.html">Katalog</a>
-      <a href="catalog.html?cat=Pashmina">Pashmina</a>
-      <a href="catalog.html?cat=Couple">Couple</a>
-      <a href="catalog.html?cat=Kids">Kids</a>
+      <a href="shop.html">Koleksi</a>
+      <a href="account.html">Akun</a>
     </nav>
-    <div class="nav-actions">
-      <a href="cart.html" class="icon-btn active" aria-label="Keranjang">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 2H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>
-        <span class="badge" data-cart-count style="display:none;">0</span>
-      </a>
-      <a href="admin.html" class="icon-btn" aria-label="Admin">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
-      </a>
+    <div class="header-icons">
+      <a href="account.html" class="icon-link">&#9998;&#65039;</a>
+      <a href="cart.html" class="icon-link"><span>&#128092;</span><span class="cart-badge" data-cart-count>0</span></a>
     </div>
   </div>
 </header>
 
-<section>
-  <div class="wrap">
-    <span class="eyebrow" id="stepLabel">Langkah 1 dari 2</span>
-    <h2 style="margin-top:8px;" id="stepTitle">Keranjang Belanja</h2>
+<div class="page-hero">
+  <h1 id="page-title">Keranjang Belanja</h1>
+  <div class="step-track" style="margin-top:18px">
+    <span id="step1" class="active">1. Keranjang</span>
+    <span id="step2">2. Pengiriman</span>
+    <span id="step3">3. Selesai</span>
+  </div>
+</div>
 
-    <div id="cartView" style="margin-top:30px;">
+<section>
+  <div class="container">
+
+    <!-- STEP 1: CART -->
+    <div id="view-cart">
       <div class="cart-layout">
-        <div id="cartItems"></div>
-        <div class="summary-card">
-          <h3 style="margin-bottom:16px;">Ringkasan Belanja</h3>
-          <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">Rp 0</span></div>
-          <div class="summary-row"><span>Ongkos Kirim</span><span id="sumShip">Rp 0</span></div>
-          <div class="summary-row total"><span>Total</span><span id="sumTotal">Rp 0</span></div>
-          <button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="goCheckout()">Lanjut ke Checkout</button>
-          <a href="catalog.html" class="btn btn-ghost btn-block" style="margin-top:10px;">Lanjut Belanja</a>
+        <div>
+          <div id="cart-lines"></div>
         </div>
+        <div class="summary-card">
+          <h3>Ringkasan Pesanan</h3>
+          <div class="summary-row"><span>Subtotal</span><span id="sum-subtotal">Rp0</span></div>
+          <div class="summary-row"><span>Ongkos Kirim</span><span id="sum-ship">Rp0</span></div>
+          <div class="summary-row total"><span>Total</span><span id="sum-total">Rp0</span></div>
+          <button class="btn btn-primary btn-block" id="to-checkout" style="margin-top:10px">Lanjut ke Pengiriman</button>
+          <a href="shop.html" class="btn btn-ghost btn-block" style="margin-top:10px">Lanjut Belanja</a>
+        </div>
+      </div>
+      <div class="empty-state" id="cart-empty" style="display:none">
+        <div class="emoji">🛍️</div>
+        <h3>Keranjangmu masih kosong</h3>
+        <p>Yuk mulai belanja koleksi favoritmu.</p>
+        <a href="shop.html" class="btn btn-primary" style="margin-top:14px">Belanja Sekarang</a>
       </div>
     </div>
 
-    <div id="checkoutView" style="display:none;margin-top:30px;">
+    <!-- STEP 2: CHECKOUT FORM -->
+    <div id="view-checkout" style="display:none">
       <div class="cart-layout">
-        <form id="checkoutForm" class="panel">
-          <div class="field"><label>Nama Lengkap</label><input type="text" id="c_name" required></div>
+        <form class="form-card" style="margin:0" id="checkout-form">
+          <h3>Data Pengiriman</h3>
+          <div class="field"><label>Nama Penerima</label><input required id="c-name" placeholder="Nama lengkap"></div>
+          <div class="field"><label>Nomor WhatsApp</label><input required id="c-phone" placeholder="08xxxxxxxxxx"></div>
+          <div class="field"><label>Alamat Lengkap</label><textarea required id="c-address" rows="3" placeholder="Jalan, nomor rumah, RT/RW"></textarea></div>
           <div class="field-row">
-            <div class="field"><label>No. WhatsApp</label><input type="tel" id="c_phone" required></div>
-            <div class="field"><label>Kode Pos</label><input type="text" id="c_zip"></div>
+            <div class="field"><label>Kota</label><input required id="c-city" placeholder="Kota"></div>
+            <div class="field"><label>Kode Pos</label><input required id="c-zip" placeholder="40123"></div>
           </div>
-          <div class="field"><label>Alamat Lengkap</label><textarea id="c_address" rows="3" required></textarea></div>
-          <div class="field"><label>Metode Pembayaran</label>
-            <select id="c_payment">
+          <div class="field">
+            <label>Metode Pembayaran</label>
+            <select id="c-payment">
               <option>Transfer Bank</option>
               <option>QRIS</option>
               <option>COD (Bayar di Tempat)</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Buat Pesanan</button>
-          <button type="button" class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="backToCart()">Kembali ke Keranjang</button>
+          <button class="btn btn-primary btn-block" type="submit">Buat Pesanan</button>
         </form>
         <div class="summary-card">
-          <h3 style="margin-bottom:16px;">Ringkasan Pesanan</h3>
-          <div id="checkoutSummaryItems" style="font-size:13px;"></div>
-          <div class="summary-row total"><span>Total</span><span id="checkoutTotal">Rp 0</span></div>
+          <h3>Ringkasan Pesanan</h3>
+          <div id="checkout-summary-lines" style="font-size:.86rem;margin-bottom:12px"></div>
+          <div class="summary-row total"><span>Total</span><span id="checkout-total">Rp0</span></div>
         </div>
       </div>
     </div>
 
-    <div id="successView" style="display:none;text-align:center;padding:60px 20px;">
-      <div style="font-size:44px;">✓</div>
-      <h2 style="margin:14px 0 8px;">Pesanan Berhasil Dibuat!</h2>
-      <p style="color:var(--ink-soft);">Nomor pesanan kamu: <strong id="orderIdText"></strong></p>
-      <p style="color:var(--ink-soft);max-width:420px;margin:10px auto 24px;">Tim AR akan menghubungi kamu via WhatsApp untuk konfirmasi pembayaran dan pengiriman.</p>
-      <a href="index.html" class="btn btn-primary">Kembali ke Beranda</a>
+    <!-- STEP 3: CONFIRMATION -->
+    <div id="view-done" style="display:none">
+      <div class="empty-state">
+        <div class="emoji">🎉</div>
+        <h3>Pesanan Berhasil Dibuat!</h3>
+        <p id="order-id-text"></p>
+        <p>Terima kasih sudah berbelanja di Larasati. Kami akan menghubungimu via WhatsApp untuk konfirmasi.</p>
+        <a href="account.html" class="btn btn-primary" style="margin-top:10px">Lihat Riwayat Pesanan</a>
+        <a href="shop.html" class="btn btn-ghost" style="margin-top:10px">Belanja Lagi</a>
+      </div>
     </div>
+
   </div>
 </section>
 
-<footer class="site">
-  <div class="wrap foot-bottom" style="border-top:none;">
-    <span>© 2026 AR Modest Fashion.</span>
-    <a href="index.html" style="color:#fff;">Kembali ke Beranda</a>
-  </div>
+<footer class="site-footer">
+  <div class="container footer-bottom" style="margin-top:0;border-top:none">&copy; 2026 Larasati Hijab. Dibuat dengan penuh perhatian.</div>
 </footer>
 
 <script src="js/app.js"></script>
 <script>
-  const SHIP_COST = 12000;
+  const SHIP_COST = 20000;
 
-  function cartWithProducts(){
-    const products = AR.getProducts();
-    return AR.getCart().map(line => {
-      const p = products.find(x => x.id === line.id);
-      return p ? { ...line, product: p } : null;
-    }).filter(Boolean);
-  }
+  function renderCart() {
+    const cart = Store.getCart();
+    const products = Store.getProducts();
+    const lines = cart.map(l => ({ ...l, product: products.find(p => p.id === l.productId) })).filter(l => l.product);
 
-  function renderCart(){
-    const lines = cartWithProducts();
-    const container = document.getElementById('cartItems');
-    if(!lines.length){
-      container.innerHTML = `<div class="empty-state"><div class="glyph">🛍️</div><p>Keranjang kamu masih kosong.</p><a href="catalog.html" class="btn btn-primary" style="margin-top:12px;">Mulai Belanja</a></div>`;
-    } else {
-      container.innerHTML = lines.map(l => `
-        <div class="cart-item">
-          <div class="thumb">${AR.productThumb(l.product)}</div>
-          <div>
-            <h3 style="font-size:15px;margin-bottom:4px;">${l.product.name}</h3>
-            <div style="color:var(--rose-deep);font-weight:700;font-size:14px;">${AR.fmt(l.product.price)}</div>
-            <div class="qty-ctrl" style="margin-top:8px;">
-              <button onclick="changeLineQty('${l.id}',-1)">−</button>
+    qs("#cart-lines").parentElement.parentElement.style.display = lines.length ? "grid" : "none";
+    qs("#cart-empty").style.display = lines.length ? "none" : "block";
+
+    qs("#cart-lines").innerHTML = lines.map(l => `
+      <div class="cart-line">
+        <img src="${l.product.image}" alt="${l.product.name}">
+        <div class="cart-line-info">
+          <strong>${l.product.name}</strong>
+          <div style="font-size:.85rem;color:var(--charcoal-500)">${formatIDR(l.product.price)}</div>
+          <div style="display:flex;align-items:center;gap:16px;margin-top:8px">
+            <div class="qty-control">
+              <button onclick="Store.updateCartQty('${l.productId}', ${l.qty - 1}); renderCart();">−</button>
               <span>${l.qty}</span>
-              <button onclick="changeLineQty('${l.id}',1)">+</button>
+              <button onclick="Store.updateCartQty('${l.productId}', ${l.qty + 1}); renderCart();">+</button>
             </div>
+            <span class="remove-link" onclick="Store.removeFromCart('${l.productId}'); renderCart();">Hapus</span>
           </div>
-          <div style="text-align:right;">
-            <div style="font-weight:800;margin-bottom:10px;">${AR.fmt(l.product.price * l.qty)}</div>
-            <button class="btn btn-ghost btn-sm" onclick="removeLine('${l.id}')">Hapus</button>
-          </div>
-        </div>`).join('');
-    }
-    const subtotal = lines.reduce((s,l)=>s + l.product.price * l.qty, 0);
-    const ship = subtotal > 0 ? (subtotal >= 150000 ? 0 : SHIP_COST) : 0;
-    document.getElementById('sumSubtotal').textContent = AR.fmt(subtotal);
-    document.getElementById('sumShip').textContent = ship === 0 ? 'Gratis' : AR.fmt(ship);
-    document.getElementById('sumTotal').textContent = AR.fmt(subtotal + ship);
+        </div>
+        <strong>${formatIDR(l.product.price * l.qty)}</strong>
+      </div>`).join("");
+
+    const subtotal = Store.cartTotal();
+    const ship = lines.length ? SHIP_COST : 0;
+    qs("#sum-subtotal").textContent = formatIDR(subtotal);
+    qs("#sum-ship").textContent = formatIDR(ship);
+    qs("#sum-total").textContent = formatIDR(subtotal + ship);
   }
 
-  function changeLineQty(id, d){
-    const cart = AR.getCart();
-    const line = cart.find(l=>l.id===id);
-    if(line){ line.qty += d; if(line.qty<=0){ AR.saveCart(cart.filter(l=>l.id!==id)); } else { AR.saveCart(cart); } }
-    renderCart();
-  }
-  function removeLine(id){ AR.saveCart(AR.getCart().filter(l=>l.id!==id)); renderCart(); }
+  qs("#to-checkout").addEventListener("click", () => {
+    if (!Store.getCart().length) return;
+    qs("#view-cart").style.display = "none";
+    qs("#view-checkout").style.display = "block";
+    qs("#step1").classList.remove("active"); qs("#step2").classList.add("active");
+    qs("#page-title").textContent = "Detail Pengiriman";
 
-  function goCheckout(){
-    const lines = cartWithProducts();
-    if(!lines.length){ AR.toast('Keranjang masih kosong'); return; }
-    document.getElementById('cartView').style.display='none';
-    document.getElementById('checkoutView').style.display='block';
-    document.getElementById('stepLabel').textContent = 'Langkah 2 dari 2';
-    document.getElementById('stepTitle').textContent = 'Detail Pengiriman';
-    const subtotal = lines.reduce((s,l)=>s + l.product.price * l.qty, 0);
-    const ship = subtotal >= 150000 ? 0 : SHIP_COST;
-    document.getElementById('checkoutSummaryItems').innerHTML = lines.map(l =>
-      `<div class="summary-row"><span>${l.product.name} × ${l.qty}</span><span>${AR.fmt(l.product.price*l.qty)}</span></div>`
-    ).join('') + `<div class="summary-row"><span>Ongkir</span><span>${ship===0?'Gratis':AR.fmt(ship)}</span></div>`;
-    document.getElementById('checkoutTotal').textContent = AR.fmt(subtotal + ship);
-  }
-  function backToCart(){
-    document.getElementById('checkoutView').style.display='none';
-    document.getElementById('cartView').style.display='block';
-    document.getElementById('stepLabel').textContent = 'Langkah 1 dari 2';
-    document.getElementById('stepTitle').textContent = 'Keranjang Belanja';
-  }
-
-  document.getElementById('checkoutForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    const lines = cartWithProducts();
-    const subtotal = lines.reduce((s,l)=>s + l.product.price * l.qty, 0);
-    const ship = subtotal >= 150000 ? 0 : SHIP_COST;
-    const order = {
-      id: String(Date.now()).slice(-8),
-      date: new Date().toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' }),
-      name: document.getElementById('c_name').value,
-      phone: document.getElementById('c_phone').value,
-      address: document.getElementById('c_address').value,
-      zip: document.getElementById('c_zip').value,
-      payment: document.getElementById('c_payment').value,
-      items: lines.map(l => ({ id:l.id, name:l.product.name, qty:l.qty, price:l.product.price })),
-      subtotal, shipping: ship, total: subtotal + ship,
-      status: 'Pending'
-    };
-    const orders = AR.getOrders();
-    orders.push(order);
-    AR.saveOrders(orders);
-    AR.saveCart([]);
-    document.getElementById('checkoutView').style.display='none';
-    document.getElementById('successView').style.display='block';
-    document.getElementById('orderIdText').textContent = '#' + order.id;
-    document.getElementById('stepLabel').style.display='none';
-    document.getElementById('stepTitle').style.display='none';
+    const products = Store.getProducts();
+    const lines = Store.getCart().map(l => ({ ...l, product: products.find(p => p.id === l.productId) }));
+    qs("#checkout-summary-lines").innerHTML = lines.map(l =>
+      `<div class="summary-row"><span>${l.product.name} x${l.qty}</span><span>${formatIDR(l.product.price * l.qty)}</span></div>`
+    ).join("") + `<div class="summary-row"><span>Ongkos Kirim</span><span>${formatIDR(SHIP_COST)}</span></div>`;
+    qs("#checkout-total").textContent = formatIDR(Store.cartTotal() + SHIP_COST);
   });
 
-  renderCart();
+  qs("#checkout-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const user = Store.currentUser();
+    const order = Store.placeOrder({
+      customerName: qs("#c-name").value,
+      phone: qs("#c-phone").value,
+      address: qs("#c-address").value,
+      city: qs("#c-city").value,
+      zip: qs("#c-zip").value,
+      payment: qs("#c-payment").value,
+      shipping: SHIP_COST,
+      userId: user ? user.id : null,
+    });
+    qs("#view-checkout").style.display = "none";
+    qs("#view-done").style.display = "block";
+    qs("#step2").classList.remove("active"); qs("#step3").classList.add("active");
+    qs("#page-title").textContent = "Pesanan Selesai";
+    qs("#order-id-text").innerHTML = `Nomor pesanan kamu: <strong>${order.id}</strong>`;
+    updateCartBadge();
+  });
+
+  document.addEventListener("DOMContentLoaded", renderCart);
 </script>
 </body>
 </html>
