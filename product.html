@@ -3,92 +3,124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="pageTitle">Produk — AR Modest Fashion</title>
+<title>Produk — Larasati</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<header class="site">
-  <div class="nav">
-    <div class="logo">AR<span class="mark">.</span><small style="margin-left:6px;">Modest Fashion</small></div>
-    <button class="burger btn-ghost btn btn-sm">Menu</button>
-    <nav class="nav-links">
+<div class="announce-bar" data-announcement></div>
+
+<header class="site-header">
+  <div class="row">
+    <a href="index.html" class="brand" data-brand-name>Larasati</a>
+    <nav class="main-nav">
       <a href="index.html">Beranda</a>
-      <a href="catalog.html" class="active">Katalog</a>
-      <a href="catalog.html?cat=Pashmina">Pashmina</a>
-      <a href="catalog.html?cat=Couple">Couple</a>
-      <a href="catalog.html?cat=Kids">Kids</a>
+      <a href="shop.html">Koleksi</a>
+      <a href="shop.html?cat=Hijab">Hijab</a>
+      <a href="shop.html?cat=Gamis">Gamis</a>
+      <a href="account.html">Akun</a>
     </nav>
-    <div class="nav-actions">
-      <a href="cart.html" class="icon-btn" aria-label="Keranjang">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 2H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>
-        <span class="badge" data-cart-count style="display:none;">0</span>
+    <div class="header-icons">
+      <a href="account.html" class="icon-link" title="Akun">&#9998;&#65039;</a>
+      <a href="cart.html" class="icon-link" title="Keranjang">
+        &#128092;
+        <span class="cart-badge" data-cart-count>0</span>
       </a>
-      <a href="admin.html" class="icon-btn" aria-label="Admin">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
-      </a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     </div>
   </div>
 </header>
 
-<section id="productDetail"></section>
+<section style="padding-top:50px">
+  <div class="container" id="product-wrap"></div>
+</section>
 
-<section class="band">
-  <div class="wrap">
-    <div class="section-head"><div><span class="eyebrow">Mungkin Kamu Suka</span><h2>Produk Serupa</h2></div></div>
-    <div class="grid" id="relatedGrid"></div>
+<section style="background:var(--cream-100)" id="related-section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Lainnya</span>
+      <h2>Mungkin Kamu Suka</h2>
+    </div>
+    <div class="product-grid" id="related-grid"></div>
   </div>
 </section>
 
-<footer class="site">
-  <div class="wrap foot-bottom" style="border-top:none;">
-    <span>© 2026 AR Modest Fashion.</span>
-    <a href="index.html" style="color:#fff;">Kembali ke Beranda</a>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div><div class="brand" data-brand-name>Larasati</div><p>Modest wear untuk perempuan Indonesia yang bergerak dengan anggun.</p></div>
+    <div><h4>Belanja</h4><ul><li><a href="shop.html?cat=Hijab">Hijab</a></li><li><a href="shop.html?cat=Gamis">Gamis</a></li><li><a href="shop.html?cat=Outer">Outer</a></li><li><a href="shop.html?cat=Kids">Kids</a></li></ul></div>
+    <div><h4>Akun</h4><ul><li><a href="account.html">Masuk / Daftar</a></li><li><a href="cart.html">Keranjang</a></li><li><a href="admin.html">Admin Panel</a></li></ul></div>
+    <div><h4>Hubungi Kami</h4><ul><li>WhatsApp: 0812-3456-7890</li><li>hello@larasati.id</li><li>Bandung, Indonesia</li></ul></div>
   </div>
+  <div class="footer-bottom">&copy; 2026 Larasati Hijab. Dibuat dengan penuh perhatian.</div>
 </footer>
 
 <script src="js/app.js"></script>
 <script>
-  const id = new URLSearchParams(location.search).get('id');
-  const products = AR.getProducts();
-  const p = products.find(x => x.id === id) || products[0];
-  document.title = p.name + ' — AR Modest Fashion';
+  function showToast(msg) {
+    let t = qs(".toast");
+    if (!t) { t = document.createElement("div"); t.className = "toast"; document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add("show");
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+  }
 
-  let qty = 1;
-
-  function renderDetail(){
-    document.getElementById('productDetail').innerHTML = `
-      <div class="wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:flex-start;padding-top:36px;">
-        <div class="thumb" style="border-radius:2px;overflow:hidden;">${AR.productThumb(p)}</div>
+  function render() {
+    const id = new URLSearchParams(location.search).get("id");
+    const p = Store.getProduct(id);
+    const wrap = qs("#product-wrap");
+    if (!p) {
+      wrap.innerHTML = `<div class="empty-state"><div class="emoji">🧕</div><h3>Produk tidak ditemukan</h3><p>Produk mungkin sudah dihapus.</p><a href="shop.html" class="btn btn-primary" style="margin-top:14px">Kembali ke Koleksi</a></div>`;
+      qs("#related-section").style.display = "none";
+      return;
+    }
+    wrap.innerHTML = `
+      <div class="about-split" style="align-items:flex-start">
+        <img src="${p.image}" alt="${p.name}" style="border-radius:var(--radius-lg);box-shadow:var(--shadow-lift)">
         <div>
-          <span class="cat" style="text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-size:12px;">${p.cat}</span>
-          <h1 style="font-size:32px;margin:10px 0;">${p.name}</h1>
-          <div class="price" style="font-size:24px;color:var(--rose-deep);font-weight:800;">
-            ${AR.fmt(p.price)} ${p.oldPrice ? `<span class="old" style="font-size:15px;">${AR.fmt(p.oldPrice)}</span>` : ''}
-          </div>
-          <p style="color:var(--ink-soft);margin:18px 0;line-height:1.7;">${p.desc}</p>
-          <p style="font-size:13px;color:var(--ink-soft);">Stok tersedia: <strong>${p.stock}</strong></p>
-          <div style="display:flex;align-items:center;gap:16px;margin:20px 0 24px;">
-            <div class="qty-ctrl">
-              <button onclick="changeQty(-1)">−</button>
-              <span id="qtyVal">1</span>
-              <button onclick="changeQty(1)">+</button>
+          <span class="eyebrow">${p.category}</span>
+          <h1 style="margin-top:6px">${p.name}</h1>
+          <div class="product-price" style="font-size:1.4rem;margin:10px 0">${formatIDR(p.price)}</div>
+          <p>${p.desc}</p>
+          <p style="font-size:.85rem">${p.stock > 0 ? "✅ " + p.stock + " stok tersedia" : "❌ Stok habis"}</p>
+          <form id="add-form" style="display:flex;gap:14px;align-items:center;margin:22px 0">
+            <div class="qty-control">
+              <button type="button" id="qminus">−</button>
+              <span id="qval">1</span>
+              <button type="button" id="qplus">+</button>
             </div>
-            <button class="btn btn-primary" onclick="AR.addToCart('${p.id}', qty)">Tambah ke Keranjang</button>
-          </div>
-          <a href="cart.html" class="btn btn-outline btn-block">Beli Langsung — Lihat Keranjang</a>
+            <button class="btn btn-primary" ${p.stock <= 0 ? "disabled" : ""}>Tambah ke Keranjang</button>
+          </form>
+          <a href="cart.html" class="btn btn-outline">Lihat Keranjang</a>
         </div>
-      </div>
-    `;
-  }
-  function changeQty(d){
-    qty = Math.max(1, Math.min(p.stock || 99, qty + d));
-    document.getElementById('qtyVal').textContent = qty;
-  }
-  renderDetail();
+      </div>`;
 
-  const related = products.filter(x => x.cat === p.cat && x.id !== p.id).slice(0,4);
-  AR.renderGrid('#relatedGrid', related.length ? related : products.filter(x=>x.id!==p.id).slice(0,4));
+    let qty = 1;
+    qs("#qminus").onclick = () => { qty = Math.max(1, qty - 1); qs("#qval").textContent = qty; };
+    qs("#qplus").onclick = () => { qty = Math.min(p.stock, qty + 1); qs("#qval").textContent = qty; };
+    qs("#add-form").onsubmit = (e) => {
+      e.preventDefault();
+      Store.addToCart(p.id, qty);
+      showToast(qty + " item ditambahkan ke keranjang");
+    };
+
+    const related = Store.getProducts().filter(x => x.category === p.category && x.id !== p.id).slice(0, 4);
+    const relGrid = qs("#related-grid");
+    if (!related.length) { qs("#related-section").style.display = "none"; }
+    else {
+      relGrid.innerHTML = related.map(r => `
+        <div class="product-card">
+          <a href="product.html?id=${r.id}" class="product-thumb"><img src="${r.image}" alt="${r.name}"></a>
+          <div class="product-info">
+            <a href="product.html?id=${r.id}"><h3>${r.name}</h3></a>
+            <div class="product-price">${formatIDR(r.price)}</div>
+          </div>
+        </div>`).join("");
+    }
+  }
+  document.addEventListener("DOMContentLoaded", render);
 </script>
 </body>
 </html>
