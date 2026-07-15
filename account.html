@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akun — Larasati</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="announce-bar" data-announcement></div>
+
+<header class="site-header">
+  <div class="row">
+    <a href="index.html" class="brand" data-brand-name>Larasati</a>
+    <nav class="main-nav">
+      <a href="index.html">Beranda</a>
+      <a href="shop.html">Koleksi</a>
+      <a href="account.html" class="active">Akun</a>
+    </nav>
+    <div class="header-icons">
+      <a href="account.html" class="icon-link">&#9998;&#65039;</a>
+      <a href="cart.html" class="icon-link"><span>&#128092;</span><span class="cart-badge" data-cart-count>0</span></a>
+    </div>
+  </div>
+</header>
+
+<section style="padding-top:60px">
+  <div class="container" id="account-wrap"></div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-bottom" style="margin-top:0;border-top:none">&copy; 2026 Larasati Hijab. Dibuat dengan penuh perhatian.</div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+  function statusTagClass(status) {
+    return { "Diproses": "tag-processing", "Dikirim": "tag-shipped", "Selesai": "tag-done", "Dibatalkan": "tag-cancel" }[status] || "tag-processing";
+  }
+
+  function renderLoggedIn(user) {
+    const orders = Store.getOrders().filter(o => o.userId === user.id);
+    qs("#account-wrap").innerHTML = `
+      <div class="section-head" style="text-align:left;margin:0 0 30px;max-width:none">
+        <h2>Halo, ${user.name}</h2>
+        <p>${user.email} · Bergabung ${new Date(user.joined).toLocaleDateString("id-ID")}</p>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Riwayat Pesanan</h3><button class="btn btn-ghost btn-sm" id="logout-btn">Keluar</button></div>
+        ${orders.length ? `
+          <table>
+            <thead><tr><th>No. Pesanan</th><th>Tanggal</th><th>Item</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody>
+              ${orders.map(o => `
+                <tr>
+                  <td>${o.id}</td>
+                  <td>${new Date(o.date).toLocaleDateString("id-ID")}</td>
+                  <td>${o.items.reduce((s, i) => s + i.qty, 0)} item</td>
+                  <td>${formatIDR(o.total + (o.shipping||0))}</td>
+                  <td><span class="tag ${statusTagClass(o.status)}">${o.status}</span></td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
+        ` : `<div class="empty-state"><div class="emoji">📦</div><p>Belum ada pesanan.</p><a href="shop.html" class="btn btn-primary">Mulai Belanja</a></div>`}
+      </div>`;
+    qs("#logout-btn").onclick = () => { Store.logoutUser(); render(); };
+  }
+
+  function renderAuthForms() {
+    qs("#account-wrap").innerHTML = `
+      <div class="form-card" id="login-card">
+        <h3>Masuk ke Akun</h3>
+        <form id="login-form">
+          <div class="field"><label>Email</label><input required type="email" id="l-email"></div>
+          <div class="field"><label>Kata Sandi</label><input required type="password" id="l-pass"></div>
+          <p id="login-error" style="color:var(--danger);font-size:.82rem;display:none"></p>
+          <button class="btn btn-primary btn-block">Masuk</button>
+        </form>
+        <p class="form-note">Belum punya akun? <a href="#" id="show-register" style="color:var(--plum-700);font-weight:600">Daftar di sini</a></p>
+      </div>
+      <div class="form-card" id="register-card" style="display:none">
+        <h3>Buat Akun Baru</h3>
+        <form id="register-form">
+          <div class="field"><label>Nama Lengkap</label><input required id="r-name"></div>
+          <div class="field"><label>Email</label><input required type="email" id="r-email"></div>
+          <div class="field"><label>Kata Sandi</label><input required type="password" id="r-pass" minlength="4"></div>
+          <p id="register-error" style="color:var(--danger);font-size:.82rem;display:none"></p>
+          <button class="btn btn-primary btn-block">Daftar</button>
+        </form>
+        <p class="form-note">Sudah punya akun? <a href="#" id="show-login" style="color:var(--plum-700);font-weight:600">Masuk di sini</a></p>
+      </div>`;
+
+    qs("#show-register").onclick = (e) => { e.preventDefault(); qs("#login-card").style.display = "none"; qs("#register-card").style.display = "block"; };
+    qs("#show-login").onclick = (e) => { e.preventDefault(); qs("#register-card").style.display = "none"; qs("#login-card").style.display = "block"; };
+
+    qs("#login-form").onsubmit = (e) => {
+      e.preventDefault();
+      const res = Store.loginUser(qs("#l-email").value, qs("#l-pass").value);
+      if (!res.ok) { qs("#login-error").textContent = res.msg; qs("#login-error").style.display = "block"; return; }
+      render();
+    };
+    qs("#register-form").onsubmit = (e) => {
+      e.preventDefault();
+      const res = Store.registerUser(qs("#r-name").value, qs("#r-email").value, qs("#r-pass").value);
+      if (!res.ok) { qs("#register-error").textContent = res.msg; qs("#register-error").style.display = "block"; return; }
+      Store.loginUser(qs("#r-email").value, qs("#r-pass").value);
+      render();
+    };
+  }
+
+  function render() {
+    const user = Store.currentUser();
+    if (user) renderLoggedIn(user); else renderAuthForms();
+  }
+  document.addEventListener("DOMContentLoaded", render);
+</script>
+</body>
+</html>
