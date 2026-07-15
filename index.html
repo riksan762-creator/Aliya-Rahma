@@ -3,127 +3,194 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AR — Hijab & Modest Fashion</title>
-<meta name="description" content="AR — koleksi hijab pashmina, bergo, dan segiempat premium untuk gaya modest yang effortless.">
+<title>Larasati — Modest Wear, Modern Grace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="topbar">GRATIS ONGKIR MIN. BELANJA RP150.000 &nbsp;•&nbsp; PESAN VIA WHATSAPP TERSEDIA</div>
+<div class="announce-bar" data-announcement>Gratis ongkir se-Indonesia untuk belanja di atas Rp350.000</div>
 
-<header class="site">
-  <div class="nav">
-    <div class="logo">AR<span class="mark">.</span><small style="margin-left:6px;">Modest Fashion</small></div>
-    <button class="burger btn-ghost btn btn-sm">Menu</button>
-    <nav class="nav-links">
+<header class="site-header">
+  <div class="row">
+    <a href="index.html" class="brand" data-brand-name>Larasati</a>
+    <nav class="main-nav">
       <a href="index.html" class="active">Beranda</a>
-      <a href="catalog.html">Katalog</a>
-      <a href="catalog.html?cat=Pashmina">Pashmina</a>
-      <a href="catalog.html?cat=Couple">Couple</a>
-      <a href="catalog.html?cat=Kids">Kids</a>
+      <a href="shop.html">Koleksi</a>
+      <a href="shop.html?cat=Hijab">Hijab</a>
+      <a href="shop.html?cat=Gamis">Gamis</a>
+      <a href="account.html">Akun</a>
     </nav>
-    <div class="nav-actions">
-      <a href="cart.html" class="icon-btn" aria-label="Keranjang">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 2H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>
-        <span class="badge" data-cart-count style="display:none;">0</span>
+    <div class="header-icons">
+      <a href="account.html" class="icon-link" title="Akun">&#9998;&#65039;</a>
+      <a href="cart.html" class="icon-link" title="Keranjang">
+        &#128092;
+        <span class="cart-badge" data-cart-count>0</span>
       </a>
-      <a href="admin.html" class="icon-btn" aria-label="Admin" title="Admin Panel">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
-      </a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     </div>
   </div>
 </header>
 
-<section class="hero" style="padding-top:70px;">
-  <div class="fold"></div>
-  <div class="wrap">
-    <div>
-      <span class="eyebrow" style="color:var(--sand);">Koleksi Musim Ini</span>
-      <h1>Anggun dalam<br><em>setiap lipatan</em></h1>
-      <p class="lead">AR menghadirkan hijab pashmina, bergo, dan segiempat dengan jatuhan kain premium — dibuat untuk perempuan yang bergerak lincah setiap hari.</p>
-      <div class="cta-row">
-        <a href="catalog.html" class="btn btn-primary" style="background:var(--rose-deep);">Belanja Sekarang</a>
-        <a href="#kategori" class="btn btn-outline" style="border-color:var(--sand);color:var(--sand);">Lihat Kategori</a>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <span class="tag">Pashmina Diamond Italiano — Rp 85.000</span>
-    </div>
+<section class="hero" id="hero" style="background-image:url('https://images.unsplash.com/photo-1611652022419-a9419f74343d?q=80&w=1400&auto=format&fit=crop')">
+  <div class="hero-content">
+    <span class="eyebrow" id="hero-eyebrow">Koleksi Terbaru</span>
+    <h1 id="hero-title">Balutan Lembut untuk Setiap Langkahmu</h1>
+    <p id="hero-subtitle">Koleksi hijab dan busana muslimah dengan jatuhan kain premium — dirancang untuk yang bergerak lincah dan tetap anggun.</p>
+    <a href="shop.html" class="btn btn-gold" id="hero-btn">Belanja Koleksi</a>
   </div>
-  <div class="wave">
-    <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path fill="#FFFDF9" d="M0,40 C240,80 480,0 720,20 C960,40 1200,80 1440,30 L1440,70 L0,70 Z"/></svg>
+</section>
+<svg class="fold-divider" viewBox="0 0 1200 46" preserveAspectRatio="none" style="fill:#FDFAF6">
+  <path d="M0,0 C100,46 200,0 300,23 C400,46 500,0 600,23 C700,46 800,0 900,23 C1000,46 1100,0 1200,23 L1200,46 L0,46 Z"></path>
+</svg>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Jelajahi</span>
+      <h2>Belanja per Kategori</h2>
+      <p>Empat lini produk yang menemani setiap momen — harian, formal, keluarga, dan si kecil.</p>
+    </div>
+    <div class="cat-grid">
+      <a class="cat-card" href="shop.html?cat=Hijab">
+        <img src="https://images.unsplash.com/photo-1611162458324-aeeb2f3c5c8f?q=80&w=600&auto=format&fit=crop" alt="Hijab">
+        <span class="cat-label">Hijab</span>
+      </a>
+      <a class="cat-card" href="shop.html?cat=Gamis">
+        <img src="https://images.unsplash.com/photo-1590927813369-2a5c8c9b6b9f?q=80&w=600&auto=format&fit=crop" alt="Gamis">
+        <span class="cat-label">Gamis</span>
+      </a>
+      <a class="cat-card" href="shop.html?cat=Outer">
+        <img src="https://images.unsplash.com/photo-1520975954732-35dd22299614?q=80&w=600&auto=format&fit=crop" alt="Outer">
+        <span class="cat-label">Outer</span>
+      </a>
+      <a class="cat-card" href="shop.html?cat=Couple">
+        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=600&auto=format&fit=crop" alt="Couple">
+        <span class="cat-label">Sarimbit</span>
+      </a>
+    </div>
   </div>
 </section>
 
-<section id="kategori">
-  <div class="wrap">
+<section style="background:var(--cream-100)">
+  <div class="container">
     <div class="section-head">
-      <div><span class="eyebrow">Jelajahi</span><h2>Belanja per Kategori</h2></div>
-      <a href="catalog.html" class="btn btn-outline btn-sm">Semua Katalog</a>
+      <span class="eyebrow">Favorit Pelanggan</span>
+      <h2>Produk Pilihan</h2>
+      <p>Diperbarui langsung dari admin panel — selalu menampilkan stok dan harga terbaru.</p>
     </div>
-    <div class="cat-strip">
-      <a href="catalog.html?cat=Pashmina" class="cat-card" style="--c:#5C7A96;">Pashmina</a>
-      <a href="catalog.html?cat=Bergo" class="cat-card" style="--c:#B8654F;">Bergo Instan</a>
-      <a href="catalog.html?cat=Segiempat" class="cat-card" style="--c:#A98552;">Segiempat</a>
-      <a href="catalog.html?cat=Couple" class="cat-card" style="--c:#3F5A73;">Couple Set</a>
+    <div class="product-grid" id="featured-grid"></div>
+    <div style="text-align:center;margin-top:40px">
+      <a href="shop.html" class="btn btn-outline">Lihat Semua Koleksi</a>
     </div>
-  </div>
-</section>
-
-<section class="band">
-  <div class="wrap">
-    <div class="section-head">
-      <div><span class="eyebrow">Terpilih</span><h2>Produk Favorit</h2></div>
-    </div>
-    <div class="grid" id="featuredGrid"></div>
   </div>
 </section>
 
 <section>
-  <div class="wrap editorial">
-    <div class="art"></div>
+  <div class="container about-split">
+    <img src="https://images.unsplash.com/photo-1601924638867-3ec6e2b8b45f?q=80&w=800&auto=format&fit=crop" alt="Tentang Larasati">
     <div>
-      <span class="eyebrow">Cerita AR</span>
-      <blockquote>"Hijab bukan sekadar penutup kepala — ia adalah cara perempuan menyapa dunia setiap pagi."</blockquote>
-      <p style="color:var(--ink-soft);">Setiap koleksi AR dirancang dari kain yang kami uji sendiri untuk kenyamanan seharian: adem di cuaca tropis, tidak mudah kusut, dan tetap jatuh rapi tanpa perlu banyak jarum pentul.</p>
-      <a href="catalog.html" class="btn btn-primary" style="margin-top:16px;">Jelajahi Koleksi</a>
+      <span class="eyebrow" id="about-eyebrow">Cerita Kami</span>
+      <h2 id="about-title">Dijahit dari Ketenangan</h2>
+      <p id="about-text">Larasati lahir dari keyakinan bahwa busana sederhana bisa terasa mewah. Setiap helai kami pilih karena jatuhnya yang ringan dan warnanya yang tenang — supaya kamu leluasa bergerak tanpa kehilangan keanggunan.</p>
+      <a href="shop.html" class="btn btn-primary">Kenali Koleksi</a>
     </div>
   </div>
 </section>
 
-<footer class="site">
-  <div class="wrap">
-    <div class="foot-grid">
-      <div>
-        <div class="logo" style="color:#fff;">AR<span class="mark">.</span></div>
-        <p style="font-size:13px;margin-top:12px;max-width:260px;">Modest fashion untuk perempuan Indonesia — pashmina, bergo, dan segiempat dengan kualitas kain premium.</p>
-      </div>
-      <div><h4>Belanja</h4>
-        <a href="catalog.html">Semua Produk</a>
-        <a href="catalog.html?cat=Pashmina">Pashmina</a>
-        <a href="catalog.html?cat=Kids">Kids</a>
-      </div>
-      <div><h4>Bantuan</h4>
-        <a href="cart.html">Keranjang</a>
-        <a href="#">Cara Belanja</a>
-        <a href="#">Kebijakan Retur</a>
-      </div>
-      <div><h4>Hubungi Kami</h4>
-        <a href="#">WhatsApp: 0812-3456-7890</a>
-        <a href="#">Instagram: @ar.hijab</a>
-        <a href="#">Sumedang, Jawa Barat</a>
-      </div>
+<section class="band-gold">
+  <div class="container">
+    <span class="eyebrow" style="color:var(--gold-300)">Bergabunglah</span>
+    <h2>Jadi Bagian dari Larasati Circle</h2>
+    <p>Daftar akun untuk menyimpan alamat, melacak pesanan, dan mendapat penawaran khusus member.</p>
+    <a href="account.html" class="btn btn-gold" style="margin-top:18px">Buat Akun</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <div class="brand" data-brand-name>Larasati</div>
+      <p>Modest wear untuk perempuan Indonesia yang bergerak dengan anggun — hijab, gamis, dan busana keluarga dengan kain pilihan.</p>
     </div>
-    <div class="foot-bottom">
-      <span>© 2026 AR Modest Fashion. Seluruh hak cipta dilindungi.</span>
-      <span>Dibuat dengan ♡ untuk perempuan Indonesia</span>
+    <div>
+      <h4>Belanja</h4>
+      <ul>
+        <li><a href="shop.html?cat=Hijab">Hijab</a></li>
+        <li><a href="shop.html?cat=Gamis">Gamis</a></li>
+        <li><a href="shop.html?cat=Outer">Outer</a></li>
+        <li><a href="shop.html?cat=Kids">Kids</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Akun</h4>
+      <ul>
+        <li><a href="account.html">Masuk / Daftar</a></li>
+        <li><a href="cart.html">Keranjang</a></li>
+        <li><a href="admin.html">Admin Panel</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Hubungi Kami</h4>
+      <ul>
+        <li>WhatsApp: 0812-3456-7890</li>
+        <li>hello@larasati.id</li>
+        <li>Bandung, Indonesia</li>
+      </ul>
     </div>
   </div>
+  <div class="footer-bottom">&copy; 2026 Larasati Hijab. Dibuat dengan penuh perhatian.</div>
 </footer>
 
 <script src="js/app.js"></script>
 <script>
-  AR.renderGrid('#featuredGrid', AR.getProducts().slice(0,4));
+  function renderHome() {
+    const s = Store.getSettings();
+    qs("#hero").style.backgroundImage = `url('${s.heroImage}')`;
+    qs("#hero-title").textContent = s.heroTitle;
+    qs("#hero-subtitle").textContent = s.heroSubtitle;
+    qs("#hero-btn").textContent = s.heroButtonText;
+    qs("#about-title").textContent = s.aboutTitle;
+    qs("#about-text").textContent = s.aboutText;
+
+    const grid = qs("#featured-grid");
+    const products = Store.getProducts().slice(0, 4);
+    grid.innerHTML = products.map(productCardHTML).join("");
+  }
+
+  function productCardHTML(p) {
+    return `
+      <div class="product-card">
+        <a href="product.html?id=${p.id}" class="product-thumb">
+          <span class="product-cat-tag">${p.category}</span>
+          <img src="${p.image}" alt="${p.name}">
+        </a>
+        <div class="product-info">
+          <a href="product.html?id=${p.id}"><h3>${p.name}</h3></a>
+          <span class="product-stock">${p.stock > 0 ? p.stock + " stok tersedia" : "Stok habis"}</span>
+          <div class="product-price">${formatIDR(p.price)}</div>
+          <form onsubmit="event.preventDefault(); Store.addToCart('${p.id}',1); showToast('Ditambahkan ke keranjang');">
+            <button class="btn btn-outline btn-block btn-sm" ${p.stock <= 0 ? "disabled" : ""}>Tambah ke Keranjang</button>
+          </form>
+        </div>
+      </div>`;
+  }
+
+  function showToast(msg) {
+    let t = qs(".toast");
+    if (!t) {
+      t = document.createElement("div");
+      t.className = "toast";
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  document.addEventListener("DOMContentLoaded", renderHome);
 </script>
 </body>
 </html>
