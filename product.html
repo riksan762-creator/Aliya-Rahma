@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Produk — AR Modest Fashion</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="nav">
+    <div class="logo">AR<span class="mark">.</span><small style="margin-left:6px;">Modest Fashion</small></div>
+    <button class="burger btn-ghost btn btn-sm">Menu</button>
+    <nav class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="catalog.html" class="active">Katalog</a>
+      <a href="catalog.html?cat=Pashmina">Pashmina</a>
+      <a href="catalog.html?cat=Couple">Couple</a>
+      <a href="catalog.html?cat=Kids">Kids</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="cart.html" class="icon-btn" aria-label="Keranjang">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 2H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>
+        <span class="badge" data-cart-count style="display:none;">0</span>
+      </a>
+      <a href="admin.html" class="icon-btn" aria-label="Admin">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<section id="productDetail"></section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="section-head"><div><span class="eyebrow">Mungkin Kamu Suka</span><h2>Produk Serupa</h2></div></div>
+    <div class="grid" id="relatedGrid"></div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap foot-bottom" style="border-top:none;">
+    <span>© 2026 AR Modest Fashion.</span>
+    <a href="index.html" style="color:#fff;">Kembali ke Beranda</a>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+  const id = new URLSearchParams(location.search).get('id');
+  const products = AR.getProducts();
+  const p = products.find(x => x.id === id) || products[0];
+  document.title = p.name + ' — AR Modest Fashion';
+
+  let qty = 1;
+
+  function renderDetail(){
+    document.getElementById('productDetail').innerHTML = `
+      <div class="wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:flex-start;padding-top:36px;">
+        <div class="thumb" style="border-radius:2px;overflow:hidden;">${AR.productThumb(p)}</div>
+        <div>
+          <span class="cat" style="text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-size:12px;">${p.cat}</span>
+          <h1 style="font-size:32px;margin:10px 0;">${p.name}</h1>
+          <div class="price" style="font-size:24px;color:var(--rose-deep);font-weight:800;">
+            ${AR.fmt(p.price)} ${p.oldPrice ? `<span class="old" style="font-size:15px;">${AR.fmt(p.oldPrice)}</span>` : ''}
+          </div>
+          <p style="color:var(--ink-soft);margin:18px 0;line-height:1.7;">${p.desc}</p>
+          <p style="font-size:13px;color:var(--ink-soft);">Stok tersedia: <strong>${p.stock}</strong></p>
+          <div style="display:flex;align-items:center;gap:16px;margin:20px 0 24px;">
+            <div class="qty-ctrl">
+              <button onclick="changeQty(-1)">−</button>
+              <span id="qtyVal">1</span>
+              <button onclick="changeQty(1)">+</button>
+            </div>
+            <button class="btn btn-primary" onclick="AR.addToCart('${p.id}', qty)">Tambah ke Keranjang</button>
+          </div>
+          <a href="cart.html" class="btn btn-outline btn-block">Beli Langsung — Lihat Keranjang</a>
+        </div>
+      </div>
+    `;
+  }
+  function changeQty(d){
+    qty = Math.max(1, Math.min(p.stock || 99, qty + d));
+    document.getElementById('qtyVal').textContent = qty;
+  }
+  renderDetail();
+
+  const related = products.filter(x => x.cat === p.cat && x.id !== p.id).slice(0,4);
+  AR.renderGrid('#relatedGrid', related.length ? related : products.filter(x=>x.id!==p.id).slice(0,4));
+</script>
+</body>
+</html>

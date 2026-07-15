@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keranjang & Checkout — AR Modest Fashion</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="nav">
+    <div class="logo">AR<span class="mark">.</span><small style="margin-left:6px;">Modest Fashion</small></div>
+    <button class="burger btn-ghost btn btn-sm">Menu</button>
+    <nav class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="catalog.html">Katalog</a>
+      <a href="catalog.html?cat=Pashmina">Pashmina</a>
+      <a href="catalog.html?cat=Couple">Couple</a>
+      <a href="catalog.html?cat=Kids">Kids</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="cart.html" class="icon-btn active" aria-label="Keranjang">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 2H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>
+        <span class="badge" data-cart-count style="display:none;">0</span>
+      </a>
+      <a href="admin.html" class="icon-btn" aria-label="Admin">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <span class="eyebrow" id="stepLabel">Langkah 1 dari 2</span>
+    <h2 style="margin-top:8px;" id="stepTitle">Keranjang Belanja</h2>
+
+    <div id="cartView" style="margin-top:30px;">
+      <div class="cart-layout">
+        <div id="cartItems"></div>
+        <div class="summary-card">
+          <h3 style="margin-bottom:16px;">Ringkasan Belanja</h3>
+          <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">Rp 0</span></div>
+          <div class="summary-row"><span>Ongkos Kirim</span><span id="sumShip">Rp 0</span></div>
+          <div class="summary-row total"><span>Total</span><span id="sumTotal">Rp 0</span></div>
+          <button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="goCheckout()">Lanjut ke Checkout</button>
+          <a href="catalog.html" class="btn btn-ghost btn-block" style="margin-top:10px;">Lanjut Belanja</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="checkoutView" style="display:none;margin-top:30px;">
+      <div class="cart-layout">
+        <form id="checkoutForm" class="panel">
+          <div class="field"><label>Nama Lengkap</label><input type="text" id="c_name" required></div>
+          <div class="field-row">
+            <div class="field"><label>No. WhatsApp</label><input type="tel" id="c_phone" required></div>
+            <div class="field"><label>Kode Pos</label><input type="text" id="c_zip"></div>
+          </div>
+          <div class="field"><label>Alamat Lengkap</label><textarea id="c_address" rows="3" required></textarea></div>
+          <div class="field"><label>Metode Pembayaran</label>
+            <select id="c_payment">
+              <option>Transfer Bank</option>
+              <option>QRIS</option>
+              <option>COD (Bayar di Tempat)</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Buat Pesanan</button>
+          <button type="button" class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="backToCart()">Kembali ke Keranjang</button>
+        </form>
+        <div class="summary-card">
+          <h3 style="margin-bottom:16px;">Ringkasan Pesanan</h3>
+          <div id="checkoutSummaryItems" style="font-size:13px;"></div>
+          <div class="summary-row total"><span>Total</span><span id="checkoutTotal">Rp 0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="successView" style="display:none;text-align:center;padding:60px 20px;">
+      <div style="font-size:44px;">✓</div>
+      <h2 style="margin:14px 0 8px;">Pesanan Berhasil Dibuat!</h2>
+      <p style="color:var(--ink-soft);">Nomor pesanan kamu: <strong id="orderIdText"></strong></p>
+      <p style="color:var(--ink-soft);max-width:420px;margin:10px auto 24px;">Tim AR akan menghubungi kamu via WhatsApp untuk konfirmasi pembayaran dan pengiriman.</p>
+      <a href="index.html" class="btn btn-primary">Kembali ke Beranda</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap foot-bottom" style="border-top:none;">
+    <span>© 2026 AR Modest Fashion.</span>
+    <a href="index.html" style="color:#fff;">Kembali ke Beranda</a>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+  const SHIP_COST = 12000;
+
+  function cartWithProducts(){
+    const products = AR.getProducts();
+    return AR.getCart().map(line => {
+      const p = products.find(x => x.id === line.id);
+      return p ? { ...line, product: p } : null;
+    }).filter(Boolean);
+  }
+
+  function renderCart(){
+    const lines = cartWithProducts();
+    const container = document.getElementById('cartItems');
+    if(!lines.length){
+      container.innerHTML = `<div class="empty-state"><div class="glyph">🛍️</div><p>Keranjang kamu masih kosong.</p><a href="catalog.html" class="btn btn-primary" style="margin-top:12px;">Mulai Belanja</a></div>`;
+    } else {
+      container.innerHTML = lines.map(l => `
+        <div class="cart-item">
+          <div class="thumb">${AR.productThumb(l.product)}</div>
+          <div>
+            <h3 style="font-size:15px;margin-bottom:4px;">${l.product.name}</h3>
+            <div style="color:var(--rose-deep);font-weight:700;font-size:14px;">${AR.fmt(l.product.price)}</div>
+            <div class="qty-ctrl" style="margin-top:8px;">
+              <button onclick="changeLineQty('${l.id}',-1)">−</button>
+              <span>${l.qty}</span>
+              <button onclick="changeLineQty('${l.id}',1)">+</button>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:800;margin-bottom:10px;">${AR.fmt(l.product.price * l.qty)}</div>
+            <button class="btn btn-ghost btn-sm" onclick="removeLine('${l.id}')">Hapus</button>
+          </div>
+        </div>`).join('');
+    }
+    const subtotal = lines.reduce((s,l)=>s + l.product.price * l.qty, 0);
+    const ship = subtotal > 0 ? (subtotal >= 150000 ? 0 : SHIP_COST) : 0;
+    document.getElementById('sumSubtotal').textContent = AR.fmt(subtotal);
+    document.getElementById('sumShip').textContent = ship === 0 ? 'Gratis' : AR.fmt(ship);
+    document.getElementById('sumTotal').textContent = AR.fmt(subtotal + ship);
+  }
+
+  function changeLineQty(id, d){
+    const cart = AR.getCart();
+    const line = cart.find(l=>l.id===id);
+    if(line){ line.qty += d; if(line.qty<=0){ AR.saveCart(cart.filter(l=>l.id!==id)); } else { AR.saveCart(cart); } }
+    renderCart();
+  }
+  function removeLine(id){ AR.saveCart(AR.getCart().filter(l=>l.id!==id)); renderCart(); }
+
+  function goCheckout(){
+    const lines = cartWithProducts();
+    if(!lines.length){ AR.toast('Keranjang masih kosong'); return; }
+    document.getElementById('cartView').style.display='none';
+    document.getElementById('checkoutView').style.display='block';
+    document.getElementById('stepLabel').textContent = 'Langkah 2 dari 2';
+    document.getElementById('stepTitle').textContent = 'Detail Pengiriman';
+    const subtotal = lines.reduce((s,l)=>s + l.product.price * l.qty, 0);
+    const ship = subtotal >= 150000 ? 0 : SHIP_COST;
+    document.getElementById('checkoutSummaryItems').innerHTML = lines.map(l =>
+      `<div class="summary-row"><span>${l.product.name} × ${l.qty}</span><span>${AR.fmt(l.product.price*l.qty)}</span></div>`
+    ).join('') + `<div class="summary-row"><span>Ongkir</span><span>${ship===0?'Gratis':AR.fmt(ship)}</span></div>`;
+    document.getElementById('checkoutTotal').textContent = AR.fmt(subtotal + ship);
+  }
+  function backToCart(){
+    document.getElementById('checkoutView').style.display='none';
+    document.getElementById('cartView').style.display='block';
+    document.getElementById('stepLabel').textContent = 'Langkah 1 dari 2';
+    document.getElementById('stepTitle').textContent = 'Keranjang Belanja';
+  }
+
+  document.getElementById('checkoutForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const lines = cartWithProducts();
+    const subtotal = lines.reduce((s,l)=>s + l.product.price * l.qty, 0);
+    const ship = subtotal >= 150000 ? 0 : SHIP_COST;
+    const order = {
+      id: String(Date.now()).slice(-8),
+      date: new Date().toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' }),
+      name: document.getElementById('c_name').value,
+      phone: document.getElementById('c_phone').value,
+      address: document.getElementById('c_address').value,
+      zip: document.getElementById('c_zip').value,
+      payment: document.getElementById('c_payment').value,
+      items: lines.map(l => ({ id:l.id, name:l.product.name, qty:l.qty, price:l.product.price })),
+      subtotal, shipping: ship, total: subtotal + ship,
+      status: 'Pending'
+    };
+    const orders = AR.getOrders();
+    orders.push(order);
+    AR.saveOrders(orders);
+    AR.saveCart([]);
+    document.getElementById('checkoutView').style.display='none';
+    document.getElementById('successView').style.display='block';
+    document.getElementById('orderIdText').textContent = '#' + order.id;
+    document.getElementById('stepLabel').style.display='none';
+    document.getElementById('stepTitle').style.display='none';
+  });
+
+  renderCart();
+</script>
+</body>
+</html>

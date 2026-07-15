@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — AR Modest Fashion</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<!-- LOGIN -->
+<div class="login-shell" id="loginScreen">
+  <div class="login-card">
+    <div class="logo" style="justify-content:center;margin-bottom:6px;">AR<span class="mark">.</span></div>
+    <p style="text-align:center;color:var(--ink-soft);font-size:13px;margin-bottom:24px;">Masuk ke Admin Panel</p>
+    <form id="loginForm">
+      <div class="field"><label>Username</label><input type="text" id="loginUser" placeholder="admin" required></div>
+      <div class="field"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••" required></div>
+      <p id="loginError" style="color:var(--rose-deep);font-size:12px;display:none;margin-bottom:12px;">Username atau password salah.</p>
+      <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+    </form>
+    <p style="text-align:center;font-size:11px;color:var(--ink-soft);margin-top:18px;">Demo: admin / ar12345</p>
+    <a href="index.html" style="display:block;text-align:center;font-size:12px;margin-top:14px;color:var(--ink-soft);">← Kembali ke toko</a>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="admin-shell" id="appScreen" style="display:none;">
+  <aside class="admin-side">
+    <div class="logo">AR<span class="mark">.</span></div>
+    <nav>
+      <a href="#" data-tab="dashboard" class="active" onclick="Admin.switchTab('dashboard');return false;">Dashboard</a>
+      <a href="#" data-tab="products" onclick="Admin.switchTab('products');return false;">Produk</a>
+      <a href="#" data-tab="orders" onclick="Admin.switchTab('orders');return false;">Pesanan</a>
+      <a href="index.html" style="margin-top:24px;">← Lihat Toko</a>
+      <a href="#" onclick="Admin.logout();return false;">Keluar</a>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-top">
+      <h2>Panel Admin</h2>
+      <span style="font-size:12px;color:var(--ink-soft);">AR Modest Fashion</span>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="tab-panel" id="tab-dashboard">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="num" id="statProducts">0</div><div class="lbl">Total Produk</div></div>
+        <div class="stat-card"><div class="num" id="statOrders">0</div><div class="lbl">Total Pesanan</div></div>
+        <div class="stat-card"><div class="num" id="statRevenue">Rp 0</div><div class="lbl">Total Pendapatan</div></div>
+        <div class="stat-card"><div class="num" id="statPending">0</div><div class="lbl">Pesanan Pending</div></div>
+      </div>
+      <div class="panel">
+        <h3 style="margin-bottom:14px;">Selamat datang kembali 👋</h3>
+        <p style="color:var(--ink-soft);font-size:14px;">Gunakan menu <strong>Produk</strong> untuk menambah atau mengubah katalog beserta foto, dan menu <strong>Pesanan</strong> untuk memantau status checkout pelanggan.</p>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="tab-panel" id="tab-products" style="display:none;">
+      <div class="admin-top">
+        <h3>Kelola Produk</h3>
+        <button class="btn btn-primary btn-sm" onclick="Admin.openProductModal(null)">+ Tambah Produk</button>
+      </div>
+      <div class="panel" style="padding:0;overflow:auto;">
+        <table>
+          <thead><tr><th>Foto</th><th>Nama</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead>
+          <tbody id="productTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="tab-panel" id="tab-orders" style="display:none;">
+      <h3 style="margin-bottom:16px;">Pesanan Masuk</h3>
+      <div class="panel" style="padding:0;overflow:auto;">
+        <table>
+          <thead><tr><th>ID / Tanggal</th><th>Pelanggan</th><th>Item</th><th>Total</th><th>Status</th><th>Ubah Status</th></tr></thead>
+          <tbody id="orderTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <h3 id="modalTitle">Tambah Produk</h3>
+    <form id="productForm" onsubmit="Admin.saveProduct(event)">
+      <input type="hidden" id="f_id">
+      <input type="hidden" id="f_img_data">
+      <div class="field">
+        <label>Foto Produk</label>
+        <label class="upload-box" for="f_img_file">
+          <img id="imgPreview" style="display:none;">
+          <span>Klik untuk unggah foto (JPG/PNG)</span>
+          <input type="file" id="f_img_file" accept="image/*" style="display:none;" onchange="Admin.handleImageUpload(this)">
+        </label>
+      </div>
+      <div class="field"><label>Nama Produk</label><input type="text" id="f_name" required></div>
+      <div class="field-row">
+        <div class="field"><label>Kategori</label>
+          <select id="f_cat">
+            <option>Pashmina</option><option>Bergo</option><option>Segiempat</option>
+            <option>Couple</option><option>Kids</option><option>Sarimbit</option>
+          </select>
+        </div>
+        <div class="field"><label>Stok</label><input type="number" id="f_stock" min="0" required></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Harga (Rp)</label><input type="number" id="f_price" min="0" required></div>
+        <div class="field"><label>Harga Coret (opsional)</label><input type="number" id="f_oldprice" min="0"></div>
+      </div>
+      <div class="field"><label>Deskripsi</label><textarea id="f_desc" rows="3"></textarea></div>
+      <div class="field" style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="f_isnew" style="width:auto;">
+        <label style="margin:0;">Tandai sebagai produk baru</label>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <button type="submit" class="btn btn-primary btn-block">Simpan Produk</button>
+        <button type="button" class="btn btn-ghost" onclick="Admin.closeProductModal()">Batal</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const ok = Admin.login(document.getElementById('loginUser').value, document.getElementById('loginPass').value);
+    if(ok){ document.getElementById('loginError').style.display='none'; Admin.showApp(); }
+    else { document.getElementById('loginError').style.display='block'; }
+  });
+  Admin.guard();
+</script>
+</body>
+</html>
