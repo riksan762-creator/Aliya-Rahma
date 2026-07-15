@@ -3,140 +3,315 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel — AR Modest Fashion</title>
+<title>Admin Panel — Larasati</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/admin.css">
 </head>
-<body class="admin-body">
+<body>
 
-<!-- LOGIN -->
-<div class="login-shell" id="loginScreen">
-  <div class="login-card">
-    <div class="logo" style="justify-content:center;margin-bottom:6px;">AR<span class="mark">.</span></div>
-    <p style="text-align:center;color:var(--ink-soft);font-size:13px;margin-bottom:24px;">Masuk ke Admin Panel</p>
-    <form id="loginForm">
-      <div class="field"><label>Username</label><input type="text" id="loginUser" placeholder="admin" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" required></div>
-      <div class="field"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" required></div>
-      <p id="loginError" style="color:var(--rose-deep);font-size:12px;display:none;margin-bottom:12px;">Username atau password salah.</p>
-      <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+<!-- LOGIN GATE -->
+<div class="admin-login-wrap" id="admin-login-wrap">
+  <div class="form-card">
+    <h3>Masuk Admin Panel</h3>
+    <p style="font-size:.85rem">Kelola produk, pesanan, dan tampilan toko Larasati.</p>
+    <form id="admin-login-form">
+      <div class="field"><label>Kata Sandi Admin</label><input required type="password" id="admin-pass" placeholder="Default: larasati2026"></div>
+      <p id="admin-login-error" style="color:var(--danger);font-size:.82rem;display:none">Kata sandi salah.</p>
+      <button class="btn btn-primary btn-block">Masuk</button>
     </form>
-    <p style="text-align:center;font-size:11px;color:var(--ink-soft);margin-top:18px;">Demo: admin / ar12345</p>
-    <a href="index.html" style="display:block;text-align:center;font-size:12px;margin-top:14px;color:var(--ink-soft);">← Kembali ke toko</a>
+    <p class="form-note"><a href="index.html" style="color:var(--plum-700)">&larr; Kembali ke Toko</a></p>
   </div>
 </div>
 
-<!-- APP -->
-<div class="admin-shell" id="appScreen" style="display:none;">
-  <aside class="admin-side">
-    <div class="logo">AR<span class="mark">.</span></div>
-    <nav>
-      <a href="#" data-tab="dashboard" class="active" onclick="Admin.switchTab('dashboard');return false;">Dashboard</a>
-      <a href="#" data-tab="products" onclick="Admin.switchTab('products');return false;">Produk</a>
-      <a href="#" data-tab="orders" onclick="Admin.switchTab('orders');return false;">Pesanan</a>
-      <a href="index.html" style="margin-top:24px;">← Lihat Toko</a>
-      <a href="#" onclick="Admin.logout();return false;">Keluar</a>
-    </nav>
+<!-- ADMIN SHELL -->
+<div class="admin-shell" id="admin-shell" style="display:none">
+  <aside class="admin-sidebar">
+    <div class="brand" data-brand-name>Larasati</div>
+    <a href="#" data-view="dashboard" class="nav-item active">📊 Dashboard</a>
+    <a href="#" data-view="products" class="nav-item">🧕 Produk</a>
+    <a href="#" data-view="orders" class="nav-item">📦 Pesanan</a>
+    <a href="#" data-view="customers" class="nav-item">👥 Pelanggan</a>
+    <a href="#" data-view="settings" class="nav-item">🎨 Tampilan Toko</a>
+    <a href="index.html" class="nav-item">🏠 Lihat Toko</a>
+    <a href="#" class="logout-link" id="admin-logout">🚪 Keluar</a>
   </aside>
 
   <main class="admin-main">
-    <div class="admin-top">
-      <h2>Panel Admin</h2>
-      <span style="font-size:12px;color:var(--ink-soft);">AR Modest Fashion</span>
-    </div>
 
     <!-- DASHBOARD -->
-    <div class="tab-panel" id="tab-dashboard">
+    <div class="admin-view" id="view-dashboard">
+      <div class="admin-topbar"><h1>Dashboard</h1></div>
       <div class="stat-grid">
-        <div class="stat-card"><div class="num" id="statProducts">0</div><div class="lbl">Total Produk</div></div>
-        <div class="stat-card"><div class="num" id="statOrders">0</div><div class="lbl">Total Pesanan</div></div>
-        <div class="stat-card"><div class="num" id="statRevenue">Rp 0</div><div class="lbl">Total Pendapatan</div></div>
-        <div class="stat-card"><div class="num" id="statPending">0</div><div class="lbl">Pesanan Pending</div></div>
+        <div class="stat-card"><div class="label">Total Produk</div><div class="value" id="stat-products">0</div></div>
+        <div class="stat-card"><div class="label">Total Pesanan</div><div class="value" id="stat-orders">0</div></div>
+        <div class="stat-card"><div class="label">Pendapatan</div><div class="value" id="stat-revenue" style="font-size:1.4rem">Rp0</div></div>
+        <div class="stat-card"><div class="label">Pelanggan Terdaftar</div><div class="value" id="stat-customers">0</div></div>
       </div>
       <div class="panel">
-        <h3 style="margin-bottom:14px;">Selamat datang kembali 👋</h3>
-        <p style="color:var(--ink-soft);font-size:14px;">Gunakan menu <strong>Produk</strong> untuk menambah atau mengubah katalog beserta foto, dan menu <strong>Pesanan</strong> untuk memantau status checkout pelanggan.</p>
+        <div class="panel-head"><h3>Pesanan Terbaru</h3></div>
+        <table><thead><tr><th>No. Pesanan</th><th>Pelanggan</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody id="recent-orders-body"></tbody></table>
       </div>
     </div>
 
     <!-- PRODUCTS -->
-    <div class="tab-panel" id="tab-products" style="display:none;">
-      <div class="admin-top">
-        <h3>Kelola Produk</h3>
-        <button class="btn btn-primary btn-sm" onclick="Admin.openProductModal(null)">+ Tambah Produk</button>
-      </div>
-      <div class="panel" style="padding:0;overflow:auto;">
-        <table>
-          <thead><tr><th>Foto</th><th>Nama</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead>
-          <tbody id="productTbody"></tbody>
-        </table>
+    <div class="admin-view" id="view-products" style="display:none">
+      <div class="admin-topbar"><h1>Produk</h1><button class="btn btn-primary" id="btn-add-product">+ Tambah Produk</button></div>
+      <div class="panel">
+        <table><thead><tr><th>Foto</th><th>Nama</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead>
+        <tbody id="products-body"></tbody></table>
       </div>
     </div>
 
     <!-- ORDERS -->
-    <div class="tab-panel" id="tab-orders" style="display:none;">
-      <h3 style="margin-bottom:16px;">Pesanan Masuk</h3>
-      <div class="panel" style="padding:0;overflow:auto;">
-        <table>
-          <thead><tr><th>ID / Tanggal</th><th>Pelanggan</th><th>Item</th><th>Total</th><th>Status</th><th>Ubah Status</th></tr></thead>
-          <tbody id="orderTbody"></tbody>
-        </table>
+    <div class="admin-view" id="view-orders" style="display:none">
+      <div class="admin-topbar"><h1>Pesanan</h1></div>
+      <div class="panel">
+        <table><thead><tr><th>No. Pesanan</th><th>Tanggal</th><th>Pelanggan</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody id="orders-body"></tbody></table>
       </div>
     </div>
+
+    <!-- CUSTOMERS -->
+    <div class="admin-view" id="view-customers" style="display:none">
+      <div class="admin-topbar"><h1>Pelanggan</h1></div>
+      <div class="panel">
+        <table><thead><tr><th>Nama</th><th>Email</th><th>Bergabung</th><th>Jumlah Pesanan</th></tr></thead>
+        <tbody id="customers-body"></tbody></table>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="admin-view" id="view-settings" style="display:none">
+      <div class="admin-topbar"><h1>Tampilan Toko</h1></div>
+      <form id="settings-form">
+        <div class="panel">
+          <h3>Identitas Brand</h3>
+          <div class="field-row">
+            <div class="field"><label>Nama Brand</label><input id="s-brand"></div>
+            <div class="field"><label>Teks Pengumuman (bar atas)</label><input id="s-announcement"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Hero (Beranda)</h3>
+          <div class="field"><label>Judul Hero</label><input id="s-heroTitle"></div>
+          <div class="field"><label>Subjudul Hero</label><textarea id="s-heroSubtitle" rows="2"></textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Teks Tombol</label><input id="s-heroButtonText"></div>
+            <div class="field"><label>URL Gambar Hero</label><input id="s-heroImage"></div>
+          </div>
+          <img id="hero-preview" class="upload-preview" style="aspect-ratio:16/7">
+        </div>
+        <div class="panel">
+          <h3>Bagian Tentang Kami</h3>
+          <div class="field"><label>Judul</label><input id="s-aboutTitle"></div>
+          <div class="field"><label>Teks</label><textarea id="s-aboutText" rows="3"></textarea></div>
+        </div>
+        <div class="panel">
+          <h3>Keamanan</h3>
+          <div class="field"><label>Ganti Kata Sandi Admin</label><input id="s-adminPassword"></div>
+        </div>
+        <button class="btn btn-primary">Simpan Perubahan</button>
+      </form>
+    </div>
+
   </main>
 </div>
 
 <!-- PRODUCT MODAL -->
-<div class="modal-overlay" id="productModal">
-  <div class="modal">
-    <h3 id="modalTitle">Tambah Produk</h3>
-    <form id="productForm" onsubmit="Admin.saveProduct(event)">
-      <input type="hidden" id="f_id">
-      <input type="hidden" id="f_img_data">
-      <div class="field">
-        <label>Foto Produk</label>
-        <label class="upload-box" for="f_img_file">
-          <img id="imgPreview" style="display:none;">
-          <span>Klik untuk unggah foto (JPG/PNG)</span>
-          <input type="file" id="f_img_file" accept="image/*" style="display:none;" onchange="Admin.handleImageUpload(this)">
-        </label>
-      </div>
-      <div class="field"><label>Nama Produk</label><input type="text" id="f_name" required></div>
+<div class="modal-backdrop" id="product-modal">
+  <div class="modal-box">
+    <div class="panel-head">
+      <h3 id="modal-title">Tambah Produk</h3>
+      <button class="close-x" id="modal-close">&times;</button>
+    </div>
+    <form id="product-form">
+      <input type="hidden" id="p-id">
+      <label class="file-input-label">Pilih Foto Produk<input type="file" id="p-image-file" accept="image/*"></label>
+      <img id="p-image-preview" class="upload-preview">
+      <div class="field"><label>Nama Produk</label><input required id="p-name"></div>
       <div class="field-row">
-        <div class="field"><label>Kategori</label>
-          <select id="f_cat">
-            <option>Pashmina</option><option>Bergo</option><option>Segiempat</option>
-            <option>Couple</option><option>Kids</option><option>Sarimbit</option>
-          </select>
-        </div>
-        <div class="field"><label>Stok</label><input type="number" id="f_stock" min="0" required></div>
+        <div class="field"><label>Kategori</label><input required id="p-category" placeholder="Hijab, Gamis, Outer..."></div>
+        <div class="field"><label>Harga (Rp)</label><input required type="number" id="p-price" min="0"></div>
       </div>
-      <div class="field-row">
-        <div class="field"><label>Harga (Rp)</label><input type="number" id="f_price" min="0" required></div>
-        <div class="field"><label>Harga Coret (opsional)</label><input type="number" id="f_oldprice" min="0"></div>
-      </div>
-      <div class="field"><label>Deskripsi</label><textarea id="f_desc" rows="3"></textarea></div>
-      <div class="field" style="display:flex;align-items:center;gap:8px;">
-        <input type="checkbox" id="f_isnew" style="width:auto;">
-        <label style="margin:0;">Tandai sebagai produk baru</label>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:8px;">
-        <button type="submit" class="btn btn-primary btn-block">Simpan Produk</button>
-        <button type="button" class="btn btn-ghost" onclick="Admin.closeProductModal()">Batal</button>
-      </div>
+      <div class="field"><label>Stok</label><input required type="number" id="p-stock" min="0"></div>
+      <div class="field"><label>Deskripsi</label><textarea id="p-desc" rows="3"></textarea></div>
+      <button class="btn btn-primary btn-block">Simpan Produk</button>
     </form>
   </div>
 </div>
 
 <script src="js/app.js"></script>
-<script src="js/admin.js"></script>
 <script>
-  document.getElementById('loginForm').addEventListener('submit', function(e){
+  /* ---------------- auth gate ---------------- */
+  function checkAuth() {
+    if (Store.isAdmin()) {
+      qs("#admin-login-wrap").style.display = "none";
+      qs("#admin-shell").style.display = "flex";
+      initAdmin();
+    } else {
+      qs("#admin-login-wrap").style.display = "flex";
+      qs("#admin-shell").style.display = "none";
+    }
+  }
+  qs("#admin-login-form").addEventListener("submit", (e) => {
     e.preventDefault();
-    const ok = Admin.login(document.getElementById('loginUser').value, document.getElementById('loginPass').value);
-    if(ok){ document.getElementById('loginError').style.display='none'; Admin.showApp(); }
-    else { document.getElementById('loginError').style.display='block'; }
+    if (Store.loginAdmin(qs("#admin-pass").value)) checkAuth();
+    else qs("#admin-login-error").style.display = "block";
   });
-  Admin.guard();
+  qs("#admin-logout").addEventListener("click", (e) => { e.preventDefault(); Store.logoutAdmin(); checkAuth(); });
+
+  /* ---------------- navigation ---------------- */
+  function switchView(view) {
+    qsa(".admin-view").forEach(v => v.style.display = "none");
+    qs("#view-" + view).style.display = "block";
+    qsa(".nav-item[data-view]").forEach(a => a.classList.toggle("active", a.dataset.view === view));
+    if (view === "dashboard") renderDashboard();
+    if (view === "products") renderProducts();
+    if (view === "orders") renderOrders();
+    if (view === "customers") renderCustomers();
+    if (view === "settings") renderSettings();
+  }
+  qsa(".nav-item[data-view]").forEach(a => a.addEventListener("click", (e) => { e.preventDefault(); switchView(a.dataset.view); }));
+
+  function initAdmin() { switchView("dashboard"); }
+
+  /* ---------------- dashboard ---------------- */
+  function statusTagClass(status) {
+    return { "Diproses": "tag-processing", "Dikirim": "tag-shipped", "Selesai": "tag-done", "Dibatalkan": "tag-cancel" }[status] || "tag-processing";
+  }
+  function renderDashboard() {
+    const products = Store.getProducts(), orders = Store.getOrders(), users = Store.getUsers();
+    qs("#stat-products").textContent = products.length;
+    qs("#stat-orders").textContent = orders.length;
+    qs("#stat-revenue").textContent = formatIDR(orders.reduce((s, o) => s + o.total + (o.shipping || 0), 0));
+    qs("#stat-customers").textContent = users.length;
+    qs("#recent-orders-body").innerHTML = orders.slice(0, 5).map(o => `
+      <tr><td>${o.id}</td><td>${o.customerName || "—"}</td><td>${formatIDR(o.total + (o.shipping||0))}</td>
+      <td><span class="tag ${statusTagClass(o.status)}">${o.status}</span></td></tr>`).join("")
+      || `<tr><td colspan="4" style="text-align:center;color:var(--charcoal-500)">Belum ada pesanan.</td></tr>`;
+  }
+
+  /* ---------------- products CRUD ---------------- */
+  function renderProducts() {
+    qs("#products-body").innerHTML = Store.getProducts().map(p => `
+      <tr>
+        <td><img class="thumb" src="${p.image}" alt=""></td>
+        <td>${p.name}</td>
+        <td>${p.category}</td>
+        <td>${formatIDR(p.price)}</td>
+        <td>${p.stock}</td>
+        <td class="table-actions">
+          <button onclick="openProductModal('${p.id}')" title="Edit">✏️</button>
+          <button class="del" onclick="removeProduct('${p.id}')" title="Hapus">🗑️</button>
+        </td>
+      </tr>`).join("") || `<tr><td colspan="6" style="text-align:center;color:var(--charcoal-500)">Belum ada produk.</td></tr>`;
+  }
+  function removeProduct(id) {
+    if (confirm("Hapus produk ini?")) { Store.deleteProduct(id); renderProducts(); renderDashboard(); }
+  }
+  let currentImageData = "";
+  function openProductModal(id) {
+    const p = id ? Store.getProduct(id) : null;
+    qs("#modal-title").textContent = p ? "Edit Produk" : "Tambah Produk";
+    qs("#p-id").value = p ? p.id : "";
+    qs("#p-name").value = p ? p.name : "";
+    qs("#p-category").value = p ? p.category : "";
+    qs("#p-price").value = p ? p.price : "";
+    qs("#p-stock").value = p ? p.stock : "";
+    qs("#p-desc").value = p ? p.desc : "";
+    currentImageData = p ? p.image : "";
+    qs("#p-image-preview").src = currentImageData || "https://images.unsplash.com/photo-1611162458324-aeeb2f3c5c8f?q=80&w=400&auto=format&fit=crop";
+    qs("#product-modal").classList.add("open");
+  }
+  qs("#btn-add-product").addEventListener("click", () => openProductModal(null));
+  qs("#modal-close").addEventListener("click", () => qs("#product-modal").classList.remove("open"));
+  qs("#product-modal").addEventListener("click", (e) => { if (e.target.id === "product-modal") qs("#product-modal").classList.remove("open"); });
+
+  qs("#p-image-file").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { currentImageData = reader.result; qs("#p-image-preview").src = currentImageData; };
+    reader.readAsDataURL(file);
+  });
+
+  qs("#product-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const id = qs("#p-id").value || "p" + Date.now();
+    Store.upsertProduct({
+      id,
+      name: qs("#p-name").value,
+      category: qs("#p-category").value,
+      price: Number(qs("#p-price").value),
+      stock: Number(qs("#p-stock").value),
+      desc: qs("#p-desc").value,
+      image: currentImageData || "https://images.unsplash.com/photo-1611162458324-aeeb2f3c5c8f?q=80&w=400&auto=format&fit=crop",
+    });
+    qs("#product-modal").classList.remove("open");
+    renderProducts(); renderDashboard();
+  });
+
+  /* ---------------- orders ---------------- */
+  function renderOrders() {
+    qs("#orders-body").innerHTML = Store.getOrders().map(o => `
+      <tr>
+        <td>${o.id}</td>
+        <td>${new Date(o.date).toLocaleDateString("id-ID")}</td>
+        <td>${o.customerName || "—"}</td>
+        <td>${formatIDR(o.total + (o.shipping||0))}</td>
+        <td>
+          <select onchange="changeOrderStatus('${o.id}', this.value)">
+            ${["Diproses","Dikirim","Selesai","Dibatalkan"].map(s => `<option ${s===o.status?"selected":""}>${s}</option>`).join("")}
+          </select>
+        </td>
+      </tr>`).join("") || `<tr><td colspan="5" style="text-align:center;color:var(--charcoal-500)">Belum ada pesanan.</td></tr>`;
+  }
+  function changeOrderStatus(id, status) { Store.updateOrderStatus(id, status); renderDashboard(); }
+
+  /* ---------------- customers ---------------- */
+  function renderCustomers() {
+    const orders = Store.getOrders();
+    qs("#customers-body").innerHTML = Store.getUsers().map(u => `
+      <tr><td>${u.name}</td><td>${u.email}</td><td>${new Date(u.joined).toLocaleDateString("id-ID")}</td>
+      <td>${orders.filter(o => o.userId === u.id).length}</td></tr>`).join("")
+      || `<tr><td colspan="4" style="text-align:center;color:var(--charcoal-500)">Belum ada pelanggan terdaftar.</td></tr>`;
+  }
+
+  /* ---------------- settings ---------------- */
+  function renderSettings() {
+    const s = Store.getSettings();
+    qs("#s-brand").value = s.brand;
+    qs("#s-announcement").value = s.announcement;
+    qs("#s-heroTitle").value = s.heroTitle;
+    qs("#s-heroSubtitle").value = s.heroSubtitle;
+    qs("#s-heroButtonText").value = s.heroButtonText;
+    qs("#s-heroImage").value = s.heroImage;
+    qs("#hero-preview").src = s.heroImage;
+    qs("#s-aboutTitle").value = s.aboutTitle;
+    qs("#s-aboutText").value = s.aboutText;
+    qs("#s-adminPassword").value = s.adminPassword;
+  }
+  qs("#s-heroImage").addEventListener("input", (e) => qs("#hero-preview").src = e.target.value);
+  qs("#settings-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    Store.saveSettings({
+      brand: qs("#s-brand").value,
+      announcement: qs("#s-announcement").value,
+      heroTitle: qs("#s-heroTitle").value,
+      heroSubtitle: qs("#s-heroSubtitle").value,
+      heroButtonText: qs("#s-heroButtonText").value,
+      heroImage: qs("#s-heroImage").value,
+      aboutTitle: qs("#s-aboutTitle").value,
+      aboutText: qs("#s-aboutText").value,
+      adminPassword: qs("#s-adminPassword").value,
+    });
+    applyBrandChrome();
+    alert("Perubahan tampilan toko berhasil disimpan.");
+  });
+
+  document.addEventListener("DOMContentLoaded", checkAuth);
 </script>
 </body>
 </html>
