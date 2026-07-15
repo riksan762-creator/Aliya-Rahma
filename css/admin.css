@@ -1,0 +1,64 @@
+/* ============================================================
+   AR Admin — dedicated stylesheet, loaded only on admin.html
+   Depends on the design tokens defined in css/style.css
+   ============================================================ */
+
+body.admin-body{ background: var(--sand); }
+
+/* ---------- Shell / sidebar ---------- */
+.admin-shell{ display:grid; grid-template-columns: 250px 1fr; min-height:100vh; }
+.admin-side{ background: var(--ink); color: rgba(255,253,249,.8); padding:26px 20px; position:sticky; top:0; height:100vh; }
+.admin-side .logo{ color:var(--white); margin-bottom:36px; }
+.admin-side nav a{
+  display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:2px; font-size:13px; font-weight:700;
+  letter-spacing:.02em; color: rgba(255,253,249,.7); margin-bottom:4px;
+}
+.admin-side nav a.active, .admin-side nav a:hover{ background: rgba(255,253,249,.1); color:var(--white); }
+.admin-main{ padding: 32px 36px 60px; }
+.admin-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; flex-wrap:wrap; gap:14px; }
+
+/* ---------- Dashboard stat cards ---------- */
+.stat-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:18px; margin-bottom:38px; }
+.stat-card{ background:var(--white); border:1px solid var(--line); border-radius:2px; padding:22px; }
+.stat-card .num{ font-family:var(--font-display); font-size:30px; font-weight:600; }
+.stat-card .lbl{ font-size:12px; color:var(--ink-soft); letter-spacing:.04em; text-transform:uppercase; margin-top:6px; }
+
+/* ---------- Panels & tables ---------- */
+.panel{ background:var(--white); border:1px solid var(--line); border-radius:2px; padding:24px; margin-bottom:26px; }
+table{ width:100%; border-collapse:collapse; font-size:13px; }
+th{ text-align:left; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); padding:10px 12px; border-bottom:2px solid var(--line); }
+td{ padding:12px; border-bottom:1px solid var(--line); vertical-align:middle; }
+tr.row-photo img{ width:44px; height:52px; object-fit:cover; border-radius:2px; background:var(--sand); }
+
+/* ---------- Order status pills ---------- */
+.status-pill{ font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; padding:5px 10px; border-radius:20px; display:inline-block; }
+.status-pending{ background:#F3E3C6; color:#7A5A17; }
+.status-diproses{ background:#D8E4EE; color:var(--blue-deep); }
+.status-dikirim{ background:#DDE9D9; color:#3D6B36; }
+.status-selesai{ background:#DCEFE3; color:#1E6B45; }
+.status-batal{ background:#F3D8D3; color:var(--rose-deep); }
+
+/* ---------- Product modal ---------- */
+.modal-overlay{
+  position:fixed; inset:0; background: rgba(42,31,45,.55); display:none; align-items:center;
+  justify-content:center; z-index:200; padding:20px;
+}
+.modal-overlay.open{ display:flex; }
+.modal{ background:var(--white); width:100%; max-width:520px; max-height:88vh; overflow:auto; border-radius:3px; padding:28px; }
+.modal h3{ font-size:20px; margin-bottom:18px; }
+.upload-box{
+  border:1.5px dashed var(--line); border-radius:2px; padding:18px; text-align:center; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--ink-soft); font-size:13px;
+}
+.upload-box img{ max-height:120px; border-radius:2px; }
+
+/* ---------- Login screen ---------- */
+.login-shell{ min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--ink); padding:20px; }
+.login-card{ background:var(--white); width:100%; max-width:380px; padding:38px 32px; border-radius:3px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px){
+  .admin-shell{ grid-template-columns: 1fr; }
+  .admin-side{ display:none; }
+  .stat-grid{ grid-template-columns: 1fr 1fr; }
+             }
